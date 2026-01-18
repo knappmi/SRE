@@ -1,0 +1,157 @@
+# GitLab CI/CD Pipeline Example
+#
+# This pipeline demonstrates GitLab CI/CD features
+
+stages:
+  - build
+  - test
+  - security
+  - package
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+# Build stage
+build:
+  stage: build
+  image: python:3.11-slim
+  script:
+    - pip install -r requirements.txt
+    - python -m py_compile app.py
+  artifacts:
+    paths:
+      - app.py
+    expire_in: 1 hour
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .cache/pip
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Test stage
+test:unit:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - pip install pytest pytest-cov
+    - pytest --cov=. --cov-report=xml --cov-report=html
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - htmlcov/
+  only:
+    - main
+    - develop
+    - merge_requests
+
+test:integration:
+  stage: test
+  image: python:3.11-slim
+  services:
+    - postgres:15
+  variables:
+    POSTGRES_DB: testdb
+    POSTGRES_USER: testuser
+    POSTGRES_PASSWORD: testpass
+  script:
+    - pip install pytest
+    - pytest tests/integration/
+  only:
+    - main
+    - develop
+
+# Security stage
+security:sast:
+  stage: security
+  image: python:3.11-slim
+  script:
+    - pip install bandit
+    - bandit -r . -f json -o bandit-report.json
+  artifacts:
+    reports:
+      sast: bandit-report.json
+  allow_failure: true
+  only:
+    - main
+    - develop
+    - merge_requests
+
+security:dependency-scan:
+  stage: security
+  image: python:3.11-slim
+  script:
+    - pip install safety
+    - safety check --json > safety-report.json
+  artifacts:
+    paths:
+      - safety-report.json
+  allow_failure: true
+  only:
+    - main
+    - develop
+
+# Package stage
+package:docker:
+  stage: package
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - main
+    - develop
+
+# Deploy stages
+.deploy_template: &deploy_template
+  image: bitnami/kubectl:latest
+  script:
+    - kubectl config use-context $KUBE_CONTEXT
+    - kubectl set image deployment/myapp myapp=$IMAGE_TAG -n $NAMESPACE
+    - kubectl rollout status deployment/myapp -n $NAMESPACE
+    - kubectl get pods -n $NAMESPACE
+
+deploy:staging:
+  <<: *deploy_template
+  stage: deploy
+  environment:
+    name: staging
+    url: https://staging.example.com
+  variables:
+    NAMESPACE: staging
+    KUBE_CONTEXT: staging-cluster
+  only:
+    - develop
+
+deploy:production:
+  <<: *deploy_template
+  stage: deploy
+  environment:
+    name: production
+    url: https://example.com
+  variables:
+    NAMESPACE: production
+    KUBE_CONTEXT: production-cluster
+  when: manual
+  only:
+    - main
+  before_script:
+    - echo "⚠️  Deploying to PRODUCTION"
+  after_script:
+    - echo "✅ Production deployment complete"
+    # Send notification
