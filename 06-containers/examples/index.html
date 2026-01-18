@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRE Training - Containers</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🐳 SRE Training - Containers</h1>
+        
+        <div class="section">
+            <h2>Container Information</h2>
+            <p><strong>Image:</strong> nginx:alpine</p>
+            <p><strong>Status:</strong> <span class="status-ok">Running</span></p>
+        </div>
+        
+        <div class="section">
+            <h3>Key Concepts</h3>
+            <ul>
+                <li>Containers provide process isolation</li>
+                <li>Images are built from Dockerfiles</li>
+                <li>Volumes persist data</li>
+                <li>Networks enable communication</li>
+                <li>Health checks ensure reliability</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h3>Quick Commands</h3>
+            <pre><code># View container logs
+docker logs &lt;container-id&gt;
+
+# Execute command in container
+docker exec -it &lt;container-id&gt; sh
+
+# Inspect container
+docker inspect &lt;container-id&gt;
+
+# View container stats
+docker stats &lt;container-id&gt;</code></pre>
+        </div>
+        
+        <footer>
+            <p>SRE Training Repository | Containers Module</p>
+        </footer>
+    </div>
+</body>
+</html>
