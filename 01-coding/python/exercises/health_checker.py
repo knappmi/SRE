@@ -54,6 +54,11 @@ import argparse
 from typing import Dict, Optional
 
 # TODO: Import requests library and handle ImportError if not installed
+# try:
+#     import requests
+# except ImportError:
+#     print("Error: requests library not installed. Run: pip install requests")
+#     sys.exit(1)
 
 
 # TODO: Configure logging

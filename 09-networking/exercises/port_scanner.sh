@@ -25,6 +25,7 @@
 # TODO: Implement the script below
 
 # TODO: Enable exit on error
+# Hint: Use 'set -e' to make script exit on any error
 
 
 # TODO: Get target and ports from arguments (with defaults)

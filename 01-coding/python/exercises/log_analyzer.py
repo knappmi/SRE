@@ -54,6 +54,11 @@ class LogAnalyzer:
     """Analyze web server logs."""
     
     # TODO: Define a regex pattern for common log format
+    # Common log format structure:
+    # IP - - [timestamp] "METHOD path PROTOCOL" status size
+    # Example: 192.168.1.1 - - [01/Jan/2024:12:00:00 +0000] "GET /index.html HTTP/1.1" 200 1234
+    # Use named groups: (?P<name>pattern)
+    # \S+ matches non-whitespace, \d+ matches digits, [^\]]+ matches anything except ]
     LOG_PATTERN = None  # Replace with proper regex
     
     def __init__(self, log_file: str):
