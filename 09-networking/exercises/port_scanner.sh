@@ -4,8 +4,16 @@
 #
 # Scans common ports on a target host
 
+set -e
+
 TARGET="${1:-localhost}"
 PORTS="${2:-22,80,443,3306,5432,6379,8080,9090}"
+
+# Validate target to prevent command injection
+if [[ ! "$TARGET" =~ ^[a-zA-Z0-9.-]+$ ]]; then
+    echo "Error: Invalid target format"
+    exit 1
+fi
 
 echo "🔍 Port Scanner"
 echo "Target: $TARGET"

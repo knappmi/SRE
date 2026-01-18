@@ -67,12 +67,24 @@ echo ""
 
 # Top processes
 echo -e "${BLUE}Top 5 Processes by CPU:${NC}"
-ps aux --sort=-%cpu | head -6 | tail -5 | awk '{printf "  %-20s %5s%% %s\n", $11, $3, $2}'
+if ps aux --sort=-%cpu >/dev/null 2>&1; then
+    # Linux
+    ps aux --sort=-%cpu | head -6 | tail -5 | awk '{printf "  %-20s %5s%% %s\n", $11, $3, $2}'
+else
+    # macOS/BSD - fallback without sort
+    ps aux | sort -nrk 3,3 | head -5 | awk '{printf "  %-20s %5s%% %s\n", $11, $3, $2}'
+fi
 echo ""
 
 # Top processes by memory
 echo -e "${BLUE}Top 5 Processes by Memory:${NC}"
-ps aux --sort=-%mem | head -6 | tail -5 | awk '{printf "  %-20s %5s%% %s\n", $11, $4, $2}'
+if ps aux --sort=-%mem >/dev/null 2>&1; then
+    # Linux
+    ps aux --sort=-%mem | head -6 | tail -5 | awk '{printf "  %-20s %5s%% %s\n", $11, $4, $2}'
+else
+    # macOS/BSD - fallback without sort
+    ps aux | sort -nrk 4,4 | head -5 | awk '{printf "  %-20s %5s%% %s\n", $11, $4, $2}'
+fi
 echo ""
 
 echo "========================================"

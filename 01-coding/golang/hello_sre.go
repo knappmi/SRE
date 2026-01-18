@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -49,9 +50,9 @@ func GetSystemInfo() (*SystemInfo, error) {
 
 // PrintSystemInfo displays system information in a formatted way
 func PrintSystemInfo(info *SystemInfo) {
-	fmt.Println("\n" + "="*50)
+	fmt.Println("\n" + strings.Repeat("=", 50))
 	fmt.Println("🚀 Hello from SRE Training!")
-	fmt.Println("="*50)
+	fmt.Println(strings.Repeat("=", 50))
 	fmt.Println("\n📊 System Information:")
 	fmt.Printf("  Hostname: %s\n", info.Hostname)
 	fmt.Printf("  OS: %s\n", info.OS)
@@ -59,7 +60,7 @@ func PrintSystemInfo(info *SystemInfo) {
 	fmt.Printf("  CPU Cores: %d\n", info.NumCPU)
 	fmt.Printf("  Go Version: %s\n", info.GoVersion)
 	fmt.Printf("  Timestamp: %s\n", info.Timestamp.Format(time.RFC3339))
-	fmt.Println("\n" + "="*50)
+	fmt.Println("\n" + strings.Repeat("=", 50))
 }
 
 // ExportJSON exports system info as JSON

@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -93,7 +94,7 @@ func main() {
 	}
 
 	fmt.Println("🏥 Health Check Tool")
-	fmt.Println("=" * 50)
+	fmt.Println(strings.Repeat("=", 50))
 	fmt.Printf("\nChecking %d service(s)...\n\n", len(urls))
 
 	results := CheckMultipleServices(urls)
@@ -116,7 +117,7 @@ func main() {
 		fmt.Println()
 	}
 
-	fmt.Println("=" * 50)
+	fmt.Println(strings.Repeat("=", 50))
 	fmt.Printf("Summary: %d/%d services healthy\n", healthyCount, len(urls))
 
 	if healthyCount < len(urls) {

@@ -74,14 +74,3 @@ groups:
         annotations:
           summary: "Container {{ $labels.name }} using high memory"
           description: "Container memory usage is {{ $value }}%"
-
-      # Container restart rate
-      - alert: ContainerRestarting
-        expr: rate(container_restart_count[15m]) > 0
-        for: 5m
-        labels:
-          severity: warning
-          category: containers
-        annotations:
-          summary: "Container {{ $labels.name }} is restarting"
-          description: "Container has restarted {{ $value }} times in the last 15 minutes"
