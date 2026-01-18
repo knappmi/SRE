@@ -1,0 +1,90 @@
+---
+# Basic Web Server Configuration Playbook
+#
+# This playbook demonstrates common Ansible concepts:
+# - Tasks and modules
+# - Variables
+# - Handlers
+# - Templates
+# - Conditionals
+
+- name: Configure Web Server
+  hosts: localhost
+  connection: local
+  become: false
+  
+  vars:
+    app_name: "sre-training"
+    app_port: 8080
+    app_directory: "/tmp/{{ app_name }}"
+    environment: "development"
+  
+  tasks:
+    - name: Display configuration info
+      debug:
+        msg: "Configuring {{ app_name }} for {{ environment }} environment"
+    
+    - name: Create application directory
+      file:
+        path: "{{ app_directory }}"
+        state: directory
+        mode: '0755'
+    
+    - name: Create application config from template
+      template:
+        src: templates/app_config.j2
+        dest: "{{ app_directory }}/config.yml"
+        mode: '0644'
+      notify: Restart application
+    
+    - name: Create application script
+      copy:
+        dest: "{{ app_directory }}/app.sh"
+        mode: '0755'
+        content: |
+          #!/bin/bash
+          echo "{{ app_name }} is running on port {{ app_port }}"
+          echo "Environment: {{ environment }}"
+          echo "Config file: {{ app_directory }}/config.yml"
+    
+    - name: Ensure log directory exists
+      file:
+        path: "{{ app_directory }}/logs"
+        state: directory
+        mode: '0755'
+    
+    - name: Create log file
+      file:
+        path: "{{ app_directory }}/logs/app.log"
+        state: touch
+        mode: '0644'
+    
+    - name: Display setup completion
+      debug:
+        msg: 
+          - "Setup completed successfully!"
+          - "Application directory: {{ app_directory }}"
+          - "Run: {{ app_directory }}/app.sh"
+  
+  handlers:
+    - name: Restart application
+      debug:
+        msg: "Application would be restarted here (handler triggered)"
+
+- name: System Information Gathering
+  hosts: localhost
+  connection: local
+  become: false
+  
+  tasks:
+    - name: Gather facts
+      setup:
+    
+    - name: Display system information
+      debug:
+        msg:
+          - "OS Family: {{ ansible_os_family }}"
+          - "Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Hostname: {{ ansible_hostname }}"
+          - "Architecture: {{ ansible_architecture }}"
+          - "Python Version: {{ ansible_python_version }}"
