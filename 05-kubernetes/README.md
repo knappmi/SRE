@@ -57,7 +57,32 @@ minikube start
 **Docker Desktop:**
 - Enable Kubernetes in Docker Desktop settings
 
-### Using the Examples
+### Working with Exercises
+
+This directory is organized into:
+- **exercises/** - Partial manifests for you to complete
+- **manifests/** - Complete reference implementations
+
+Start with the exercises:
+
+```bash
+# 1. Try completing the exercises
+cd exercises
+# Read README.md for instructions
+# Edit YAML files to fill in TODO sections
+
+# 2. Validate your work
+kubectl apply -f deployment.yaml --dry-run=client
+
+# 3. Apply to cluster (if available)
+kubectl apply -f deployment.yaml
+kubectl get all
+
+# 4. Compare with solutions
+diff exercises/deployment.yaml manifests/deployment.yaml
+```
+
+### Using the Solutions
 
 ```bash
 cd manifests/

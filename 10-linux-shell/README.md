@@ -36,7 +36,35 @@ Linux and shell scripting are foundational for SREs:
 - Networking: curl, wget, netstat, ss
 - Archives: tar, gzip, zip
 
+## 📁 Directory Structure
+
+The scripts directory contains:
+- **exercises/** - Practice scripts for you to complete (with TODO comments)
+- **solutions/** - Reference implementations
+
 ## 🚀 Getting Started
+
+### Working on Exercises
+
+Try the exercises in order of difficulty:
+
+```bash
+cd scripts/exercises
+
+# 1. System Information (Beginner)
+chmod +x system_info.sh
+./system_info.sh
+
+# 2. Log Analyzer (Intermediate)
+chmod +x log_analyzer.sh
+./log_analyzer.sh /var/log/syslog 100
+
+# 3. Service Monitor (Advanced)
+chmod +x service_monitor.sh
+./service_monitor.sh --once
+```
+
+After attempting each exercise, compare your solution with the reference in `scripts/solutions/`.
 
 ### Essential Commands Quick Reference
 

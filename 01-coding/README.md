@@ -27,37 +27,58 @@ Coding is a fundamental skill for SREs. While you don't need to be a software en
 - Quick scripting and glue code
 - Understanding Linux/Unix environments
 
-## 🚀 Getting Started
+## 📁 Directory Structure
 
-### Python Exercises
+Each language has two directories:
+- **exercises/** - Practice problems for you to solve (with TODO comments)
+- **solutions/** - Complete reference implementations
+
+## 🚀 How to Use This Section
+
+### Step 1: Work on Exercises
+Start with the exercise files to test your knowledge:
+
+**Python Exercises:**
 ```bash
-cd python
+cd python/exercises
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python3 hello_sre.py
+python3 hello_sre.py  # Start here
+python3 log_analyzer.py <logfile>
+python3 health_checker.py <url>
 ```
 
-### Go Exercises
+**Go Exercises:**
 ```bash
-cd golang
-go run hello_sre.go
+cd golang/exercises
+go run hello_sre.go  # Start here
+go run health_checker.go <url1> <url2>
 ```
 
-### Bash Exercises
+**Bash Exercises:**
 ```bash
-cd bash
+cd bash/exercises
 chmod +x *.sh
-./hello_sre.sh
+./hello_sre.sh  # Start here
+./system_monitor.sh
+./backup_script.sh /source/path /backup/destination
 ```
+
+### Step 2: Check Solutions
+After attempting the exercises, compare your solution with the reference implementations in the `solutions/` directory.
+
+### Step 3: Iterate
+Refine your code based on what you learned from the solutions!
 
 ## 📖 What You'll Learn
 
 1. **Automation Scripts**: Write scripts to automate common tasks
-2. **API Integration**: Interact with REST APIs for monitoring and deployment
+2. **System Monitoring**: Gather and analyze system metrics
 3. **Log Processing**: Parse and analyze log files
-4. **Error Handling**: Build robust, production-ready code
-5. **Testing**: Write tests for your automation code
+4. **Health Checks**: Implement robust service health monitoring
+5. **Error Handling**: Build robust, production-ready code
+6. **Concurrency**: Use goroutines, async operations effectively
 
 ## 💡 Best Practices
 
@@ -70,11 +91,25 @@ chmod +x *.sh
 
 ## 🎓 Exercise Progression
 
-1. Start with `hello_sre` examples in each language
-2. Move to automation scripts
-3. Try the API integration exercises
-4. Work on the log processing challenges
-5. Build a complete tool combining concepts
+### Beginner Level
+1. **hello_sre** - Basic script structure, logging, system info gathering
+
+### Intermediate Level
+2. **system_monitor** (Bash) - System health checks, thresholds, status reporting
+3. **backup_script** (Bash) - File operations, compression, rotation
+
+### Advanced Level
+4. **log_analyzer** (Python) - Regex parsing, data aggregation, reporting
+5. **health_checker** (Python/Go) - HTTP clients, retry logic, concurrency
+
+## 📝 Tips for Success
+
+- Read the requirements carefully in each exercise file
+- Follow the hints provided in the TODO comments
+- Start simple - get basic functionality working first
+- Test incrementally as you build
+- Compare with solutions only after attempting the exercise
+- Try to understand _why_ the solution is structured that way
 
 ## 📚 Additional Resources
 

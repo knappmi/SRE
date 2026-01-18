@@ -1,0 +1,90 @@
+# Kubernetes Deployment Exercise
+#
+# OBJECTIVE:
+# Create a complete Kubernetes Deployment manifest for an nginx web application
+#
+# REQUIREMENTS:
+# 1. Create a Deployment named "nginx-deployment"
+# 2. Use labels: app=nginx, environment=training
+# 3. Configure 3 replicas
+# 4. Use nginx:1.25-alpine image
+# 5. Expose port 80 (name it "http")
+# 6. Set resource requests: 64Mi memory, 100m CPU
+# 7. Set resource limits: 128Mi memory, 200m CPU
+# 8. Add liveness probe:
+#    - HTTP GET on path / port 80
+#    - initialDelaySeconds: 10
+#    - periodSeconds: 10
+#    - timeoutSeconds: 5
+#    - failureThreshold: 3
+# 9. Add readiness probe:
+#    - HTTP GET on path / port 80
+#    - initialDelaySeconds: 5
+#    - periodSeconds: 5
+#    - timeoutSeconds: 3
+#    - failureThreshold: 2
+#
+# HINTS:
+# - Use 'apiVersion: apps/v1' and 'kind: Deployment'
+# - The spec needs: replicas, selector, template
+# - selector.matchLabels should match template.metadata.labels
+# - containers is an array (use - for list items)
+# - Resources go under container spec
+# - Probes go under container spec
+#
+# TODO: Complete the manifest below
+
+---
+# TODO: Add apiVersion (apps/v1)
+
+# TODO: Add kind (Deployment)
+
+metadata:
+  # TODO: Add deployment name
+  
+  # TODO: Add labels (app, environment)
+  
+spec:
+  # TODO: Set number of replicas
+  
+  # TODO: Add selector with matchLabels
+  
+  
+  # TODO: Add pod template
+  template:
+    metadata:
+      # TODO: Add pod labels (should match selector)
+      
+    spec:
+      # TODO: Add containers array
+      containers:
+      # TODO: Define container with:
+      # - name
+      # - image
+      # - ports (containerPort, name)
+      # - resources (requests and limits)
+      # - livenessProbe
+      # - readinessProbe
+        
+
+---
+# Service for the Deployment
+#
+# TODO: Complete this Service manifest
+# Requirements:
+# - Name: nginx-service
+# - Type: ClusterIP
+# - Selector: app=nginx
+# - Port: 80, targetPort: 80
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: # TODO: Add service name
+spec:
+  # TODO: Add selector
+  
+  # TODO: Add type
+  
+  # TODO: Add ports array
+  

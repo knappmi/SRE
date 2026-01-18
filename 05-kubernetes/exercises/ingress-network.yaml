@@ -1,0 +1,62 @@
+# Ingress and NetworkPolicy Exercise
+#
+# OBJECTIVE: Create an Ingress for HTTP routing and NetworkPolicy for security
+#
+# REQUIREMENTS:
+# 1. Ingress that routes:
+#    - /app -> frontend-service:80
+#    - /api -> backend-service:8080
+# 2. NetworkPolicy that:
+#    - Allows frontend pods to communicate with backend pods
+#    - Blocks all other ingress traffic to backend pods
+#
+# TODO: Complete the manifests below
+
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: # TODO: app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: # TODO: example.com or your domain
+    http:
+      paths:
+      # TODO: Add path for /app -> frontend-service:80
+      # - path: /app
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: frontend-service
+      #       port:
+      #         number: 80
+      
+      # TODO: Add path for /api -> backend-service:8080
+
+---
+# NetworkPolicy - Allow only frontend to access backend
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: # TODO: backend-netpol
+spec:
+  # TODO: Add podSelector for backend pods
+  # podSelector:
+  #   matchLabels:
+  #     app: backend
+  
+  policyTypes:
+  - Ingress
+  
+  ingress:
+  # TODO: Allow traffic from frontend pods
+  # - from:
+  #   - podSelector:
+  #       matchLabels:
+  #         app: frontend
+  #   ports:
+  #   - protocol: TCP
+  #     port: 8080

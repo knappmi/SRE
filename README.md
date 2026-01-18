@@ -48,29 +48,85 @@ make cleanup
 
 ## 📖 How to Use This Repository
 
-1. **Choose a Concept**: Navigate to any concept directory that interests you
-2. **Read the README**: Each directory has a detailed README explaining the concept's importance
-3. **Follow Along**: Work through the examples and exercises in order
-4. **Practice**: Modify the examples and create your own variations
-5. **Test Your Knowledge**: Complete the challenges in each section
+This repository is structured to support **active learning** through hands-on practice:
 
-## 🛠️ Directory Structure
+### Two Learning Approaches
 
+#### 1. **Coding & Scripting** (01-coding, 09-networking, 10-linux-shell)
+These directories contain:
+- **exercises/** - Incomplete scripts with TODO comments and requirements
+- **solutions/** - Complete reference implementations
+
+**How to practice:**
+1. Start with exercise files
+2. Read the requirements and hints
+3. Fill in the TODO sections
+4. Test your implementation
+5. Compare with solutions
+
+#### 2. **Configuration & Infrastructure** (02-iac, 03-config-mgmt, 04-databases, 05-kubernetes, 06-containers, 07-monitoring, 08-cicd)
+These directories contain:
+- Complete working examples (reference implementations)
+- **EXERCISES.md** - Practice ideas and modification suggestions
+
+**How to practice:**
+1. Study the working examples
+2. Follow the practice ideas in EXERCISES.md
+3. Modify and extend the configurations
+4. Apply changes and test
+5. Build on the examples with your own scenarios
+
+### Recommended Workflow
+
+1. **Choose a Concept**: Navigate to any directory that interests you
+2. **Read the README**: Understand the concept's importance and key ideas
+3. **Work on Exercises**: 
+   - For coding: Complete TODO sections in exercise files
+   - For config: Follow EXERCISES.md practice ideas
+4. **Test Your Work**: Run, validate, and verify your implementations
+5. **Compare**: Check solutions or reference implementations
+6. **Iterate**: Refine based on what you learned
+
+## 🛠️ Repository Structure
+
+Each concept directory follows one of these patterns:
+
+### Pattern 1: Exercises + Solutions
 ```
-.
-├── README.md (this file)
-├── Makefile (infrastructure setup)
-├── 01-coding/
-├── 02-iac/
-├── 03-configuration-management/
-├── 04-databases/
-├── 05-kubernetes/
-├── 06-containers/
-├── 07-monitoring/
-├── 08-cicd/
-├── 09-networking/
-└── 10-linux-shell/
+01-coding/
+├── README.md
+├── python/
+│   ├── exercises/     # TODO templates to complete
+│   └── solutions/     # Reference implementations
+├── bash/
+│   ├── exercises/
+│   └── solutions/
+└── golang/
+    ├── exercises/
+    └── solutions/
 ```
+
+### Pattern 2: Examples + Practice Guide
+```
+02-iac/
+├── README.md
+├── EXERCISES.md       # Practice ideas and modifications
+└── terraform/         # Working examples to study and modify
+```
+
+**Directories with exercises/solutions pattern:**
+- 01-coding (Python, Bash, Go)
+- 05-kubernetes (partial YAML templates)
+- 09-networking (shell scripts)
+- 10-linux-shell (shell scripts)
+
+**Directories with examples + practice guide:**
+- 02-iac (Terraform)
+- 03-configuration-management (Ansible)
+- 04-databases (SQL, NoSQL)
+- 06-containers (Docker)
+- 07-monitoring (Prometheus, Grafana)
+- 08-cicd (GitHub Actions, GitLab CI, Jenkins)
 
 ## 🤝 Contributing
 
