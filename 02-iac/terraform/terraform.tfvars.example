@@ -1,0 +1,5 @@
+# Environment-specific variables
+# Copy this file to terraform.tfvars and customize
+
+environment  = "development"
+project_name = "sre-training"

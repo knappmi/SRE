@@ -1,0 +1,183 @@
+// Jenkins Pipeline Example (Jenkinsfile)
+// Declarative Pipeline syntax
+
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_REGISTRY = 'docker.io'
+        IMAGE_NAME = 'myapp'
+        DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
+    }
+    
+    options {
+        timestamps()
+        timeout(time: 1, unit: 'HOURS')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                script {
+                    env.GIT_COMMIT_SHORT = sh(
+                        script: "git rev-parse --short HEAD",
+                        returnStdout: true
+                    ).trim()
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    echo "Building application..."
+                    sh '''
+                        pip install -r requirements.txt
+                        python -m py_compile app.py
+                    '''
+                }
+            }
+        }
+        
+        stage('Test') {
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                        sh '''
+                            pip install pytest pytest-cov
+                            pytest --cov=. --cov-report=xml --cov-report=html
+                        '''
+                    }
+                    post {
+                        always {
+                            junit 'test-results/*.xml'
+                            publishHTML([
+                                reportDir: 'htmlcov',
+                                reportFiles: 'index.html',
+                                reportName: 'Coverage Report'
+                            ])
+                        }
+                    }
+                }
+                
+                stage('Lint') {
+                    steps {
+                        sh '''
+                            pip install flake8
+                            flake8 . --format=pylint > flake8-report.txt
+                        '''
+                    }
+                    post {
+                        always {
+                            recordIssues(tools: [flake8(pattern: 'flake8-report.txt')])
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Security Scan') {
+            steps {
+                script {
+                    echo "Running security scans..."
+                    sh '''
+                        pip install bandit safety
+                        bandit -r . -f json -o bandit-report.json || true
+                        safety check --json > safety-report.json || true
+                    '''
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry("https://${DOCKER_REGISTRY}", 'docker-hub-credentials') {
+                        def customImage = docker.build("${IMAGE_NAME}:${env.GIT_COMMIT_SHORT}")
+                        customImage.push()
+                        customImage.push('latest')
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy to Staging') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                script {
+                    echo "Deploying to staging..."
+                    sh '''
+                        kubectl config use-context staging
+                        kubectl set image deployment/myapp myapp=${IMAGE_NAME}:${GIT_COMMIT_SHORT} -n staging
+                        kubectl rollout status deployment/myapp -n staging
+                    '''
+                }
+            }
+            post {
+                success {
+                    echo "✅ Staging deployment successful"
+                }
+                failure {
+                    echo "❌ Staging deployment failed"
+                }
+            }
+        }
+        
+        stage('Deploy to Production') {
+            when {
+                branch 'main'
+            }
+            steps {
+                input message: 'Deploy to production?', ok: 'Deploy'
+                
+                script {
+                    echo "Deploying to production..."
+                    sh '''
+                        kubectl config use-context production
+                        kubectl set image deployment/myapp myapp=${IMAGE_NAME}:${GIT_COMMIT_SHORT} -n production
+                        kubectl rollout status deployment/myapp -n production
+                    '''
+                }
+            }
+            post {
+                success {
+                    echo "🎉 Production deployment successful"
+                    // Send Slack notification
+                }
+                failure {
+                    echo "❌ Production deployment failed - rolling back"
+                    sh 'kubectl rollout undo deployment/myapp -n production'
+                }
+            }
+        }
+        
+        stage('Smoke Tests') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        sh 'curl -f https://example.com/health || exit 1'
+                    } else if (env.BRANCH_NAME == 'develop') {
+                        sh 'curl -f https://staging.example.com/health || exit 1'
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo "Pipeline completed successfully ✅"
+        }
+        failure {
+            echo "Pipeline failed ❌"
+            // Send notification
+        }
+    }
+}
