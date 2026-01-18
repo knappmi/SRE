@@ -1,0 +1,57 @@
+# Namespace and ResourceQuota Exercise
+#
+# OBJECTIVE: Create a namespace with resource quotas and limits
+#
+# REQUIREMENTS:
+# 1. Create a namespace called "dev-team"
+# 2. Apply ResourceQuota limiting:
+#    - Maximum 10 pods
+#    - Maximum 4 CPU cores
+#    - Maximum 8Gi memory
+# 3. Apply LimitRange for default limits:
+#    - Default CPU request: 100m, limit: 200m
+#    - Default memory request: 128Mi, limit: 256Mi
+#
+# TODO: Complete the manifests below
+
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: # TODO: dev-team
+
+---
+# ResourceQuota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: dev-team-quota
+  namespace: # TODO: dev-team
+spec:
+  hard:
+    # TODO: Add resource limits
+    # pods: "10"
+    # requests.cpu: "4"
+    # requests.memory: "8Gi"
+    # limits.cpu: "4"
+    # limits.memory: "8Gi"
+
+---
+# LimitRange
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: dev-team-limits
+  namespace: # TODO: dev-team
+spec:
+  limits:
+  - default:  # Default limits
+      # TODO: Add default limits
+      # cpu: "200m"
+      # memory: "256Mi"
+    defaultRequest:  # Default requests
+      # TODO: Add default requests
+      # cpu: "100m"
+      # memory: "128Mi"
+    type: Container
